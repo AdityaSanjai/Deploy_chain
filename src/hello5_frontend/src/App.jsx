@@ -1,30 +1,43 @@
-import { useState } from 'react';
-import { hello5_backend } from 'declarations/hello5_backend';
+import React, { useState } from 'react';
+import './App.css';
 
 function App() {
-  const [greeting, setGreeting] = useState('');
+  const [tasks, setTasks] = useState([]);
+  const [task, setTask] = useState('');
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    hello5_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
+  const handleAddTask = () => {
+    if (task) {
+      setTasks([...tasks, task]);
+      setTask('');
+    }
+  };
+
+  const handleRemoveTask = (index) => {
+    const newTasks = tasks.filter((_, i) => i !== index);
+    setTasks(newTasks);
+  };
 
   return (
-    <main>
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
-      </form>
-      <section id="greeting">{greeting}</section>
-    </main>
+    <div className="App">
+      <h1>To-Do List</h1>
+      <div className="task-input">
+        <input
+          type="text"
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
+          placeholder="Enter a new task"
+        />
+        <button onClick={handleAddTask}>Add Task</button>
+      </div>
+      <ul className="task-list">
+        {tasks.map((t, index) => (
+          <li key={index}>
+            {t}
+            <button onClick={() => handleRemoveTask(index)}>Remove</button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
